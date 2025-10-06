@@ -1,3 +1,6 @@
-﻿TwoSum twoSum = new();
-twoSum.Test();
+﻿// TwoSum twoSum = new();
+// twoSum.Test();
+
+SmallestMissingPositiveInteger smallest = new();
+smallest.Test();
           
