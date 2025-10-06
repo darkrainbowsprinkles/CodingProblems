@@ -4,5 +4,8 @@
 // SmallestMissingPositiveInteger smallest = new();
 // smallest.Test();
 
-RomanToInt romanToInt = new();
-romanToInt.Test();
+// RomanToInt romanToInt = new();
+// romanToInt.Test();
+
+MergeArrays mergeArrays = new();
+mergeArrays.Test();
