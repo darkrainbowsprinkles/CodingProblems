@@ -7,5 +7,8 @@
 // RomanToInt romanToInt = new();
 // romanToInt.Test();
 
-MergeArrays mergeArrays = new();
-mergeArrays.Test();
+// MergeArrays mergeArrays = new();
+// mergeArrays.Test();
+
+ReverseString reverseString = new();
+reverseString.Test();
