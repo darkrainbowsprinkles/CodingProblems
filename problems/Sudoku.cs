@@ -8,9 +8,32 @@ public class Sudoku
             return puzzle;
         }
 
-        //...
-        
-        return puzzle;
+        List<List<int>> solvedPuzzle = [.. puzzle];
+
+        for (int row = 0; row < 9; row++)
+        {
+            for (int column = 0; column < 9; column++)
+            {
+                if (solvedPuzzle[row][column] != 0)
+                {
+                    continue;
+                }
+
+                List<int> possible = GetPossibleNumbers(solvedPuzzle, row, column);
+
+                if (possible.Count == 0)
+                {
+                    return [];
+                }
+
+                if (possible.Count == 1)
+                {
+                    solvedPuzzle[row][column] = possible[0];
+                }
+            }
+        }
+
+        return solvedPuzzle;
     }
     
     bool IsSolved(List<List<int>> puzzle)
