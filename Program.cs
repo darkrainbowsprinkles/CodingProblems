@@ -13,18 +13,28 @@
 // ReverseString reverseString = new();
 // reverseString.Test();
 
-Sudoku sudoku = new();
+// Sudoku sudoku = new();
 
-List<List<int>> puzzle = [
-    [0,4,0,5,0,7,0,0,0],
-    [3,5,0,0,0,0,2,7,1],
-    [0,0,0,0,0,0,0,0,0],
-    [5,0,0,2,0,0,9,4,0],
-    [0,0,1,0,0,0,0,0,0],
-    [7,0,2,0,0,0,8,0,0],
-    [2,6,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,3,5,0],
-    [0,0,4,0,9,0,0,0,0]
-];
+// List<List<int>> puzzle = [
+//     [0,4,0,5,0,7,0,0,0],
+//     [3,5,0,0,0,0,2,7,1],
+//     [0,0,0,0,0,0,0,0,0],
+//     [5,0,0,2,0,0,9,4,0],
+//     [0,0,1,0,0,0,0,0,0],
+//     [7,0,2,0,0,0,8,0,0],
+//     [2,6,0,0,0,0,0,0,0],
+//     [0,0,0,0,0,0,3,5,0],
+//     [0,0,4,0,9,0,0,0,0]
+// ];
 
-Utils.PrintPuzzle(sudoku.GetSolvedPuzzle(puzzle));
+// Utils.PrintPuzzle(sudoku.GetSolvedPuzzle(puzzle));
+
+Graph graph = new();
+
+graph.AddNodes(["A","B","C","D","E","F","G"]);
+
+graph.AddChildren("A", ["B","C","D"]);
+graph.AddChildren("B", ["E", "F"]);
+graph.AddChildren("C", ["G"]);
+
+graph.DepthFirstSearch("A", "G");
