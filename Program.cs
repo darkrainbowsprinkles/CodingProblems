@@ -31,10 +31,10 @@
 
 Graph graph = new();
 
-graph.AddNodes(["A","B","C","D","E","F","G"]);
+graph.AddNodes(["A","B","C","D","E","F","G"], [1,2,3,4,5,6,7,8]);
 
 graph.AddChildren("A", ["B","C","D"]);
 graph.AddChildren("B", ["E", "F"]);
 graph.AddChildren("C", ["G"]);
 
-graph.DepthFirstSearch("A", "G");
+graph.GreedyBestFirstSearch("A", "G");

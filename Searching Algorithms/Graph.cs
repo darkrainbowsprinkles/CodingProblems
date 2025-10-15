@@ -1,13 +1,13 @@
 public class Graph
 {
-    Dictionary<string, Node> nodes = [];
+    Dictionary<string, Node> nodesLookup = [];
 
-    public void AddNodes(string[] names)
+    public void AddNodes(string[] names, int[] values)
     {
-        foreach (string name in names)
+        for (int i = 0; i < names.Length; i++)
         {
-            Node newNode = new(name);
-            nodes[name] = newNode;
+            Node newNode = new(names[i], values[i]);
+            nodesLookup[names[i]] = newNode;
         }
     }
 
@@ -15,39 +15,40 @@ public class Graph
     {
         foreach (string child in children)
         {
-            Node parentNode = nodes[parent];
-            Node childNode = nodes[child];
+            Node parentNode = nodesLookup[parent];
+            Node childNode = nodesLookup[child];
             parentNode.AddChild(childNode);
         }
     }
     
     public List<Node> DepthFirstSearch(string start, string goal)
     {
-        return BlindSearch(new StackFrontier(), "DFS", start, goal);
+        return Search(new StackFrontier(), "DFS", start, goal);
     }
 
     public List<Node> BreadthFirstSearch(string start, string goal)
     {
-        return BlindSearch(new QueueFrontier(), "BFS", start, goal);
+        return Search(new QueueFrontier(), "BFS", start, goal);
     }
 
-    List<Node> BlindSearch(IFrontier frontier, string searchName, string start, string goal)
+    public List<Node> GreedyBestFirstSearch(string start, string goal)
     {
-        Node startNode = nodes[start];
-        Node goalNode = nodes[goal];
-
+        return Search(new ListFrontier(), "Greedy Best First Search", start, goal);
+    }
+    
+    List<Node> Search(IFrontier frontier, string searchName, string start, string goal)
+    {
+        Node startNode = nodesLookup[start];
+        Node goalNode = nodesLookup[goal];
         HashSet<Node> visited = [];
-        Dictionary<Node, Node?> parents = [];
 
         frontier.Add(startNode);
-
-        parents[startNode] = null;
 
         while (frontier.GetSize() != 0)
         {
             Node currentNode = frontier.Take();
 
-            VisitNode(frontier, visited, parents, currentNode);
+            VisitNode(frontier, visited, currentNode);
 
             if (currentNode == goalNode)
             {
@@ -55,17 +56,14 @@ public class Graph
             }
         }
 
-        List<Node> path = GetPath(parents, goalNode);
+        List<Node> path = GetPath(goalNode);
 
-        Console.WriteLine($"----{searchName}----");
-        PrintGraph();
-        PrintNodes(visited, "Visited:", ",");
-        PrintNodes(path, "Path:", "->");
+        PrintSearch(searchName, visited, path);
 
         return path;
     }
 
-    void VisitNode(IFrontier frontier, HashSet<Node> visited, Dictionary<Node, Node?> parents, Node currentNode)
+    void VisitNode(IFrontier frontier, HashSet<Node> visited, Node currentNode)
     {
         visited.Add(currentNode);
 
@@ -76,12 +74,12 @@ public class Graph
                 continue;
             }
 
-            parents[child] = currentNode;
+            child.SetParent(currentNode);
             frontier.Add(child);
         }
     }
 
-    List<Node> GetPath(Dictionary<Node, Node?> parents, Node goalNode)
+    List<Node> GetPath(Node goalNode)
     {
         List<Node> path = [];
         Node? currentNode = goalNode;
@@ -89,11 +87,25 @@ public class Graph
         while (currentNode != null)
         {
             path.Add(currentNode);
-            currentNode = parents[currentNode];
+            currentNode = currentNode.GetParent();
         }
 
         path.Reverse();
         return path;
+    }
+
+    void PrintSearch(string searchName, HashSet<Node> visited, List<Node> path)
+    {
+        Console.WriteLine($"----{searchName}----");
+        PrintGraph();
+
+        if (searchName == "Greedy Best First Search")
+        {
+            PrintValues();
+        }
+
+        PrintNodes(visited, "Visited:", ",");
+        PrintNodes(path, "Path:", "->");
     }
 
     void PrintNodes(IEnumerable<Node> nodes, string title, string separator)
@@ -116,7 +128,26 @@ public class Graph
                 Console.Write(separator);
             }
         }
-        
+
+        Console.WriteLine("]");
+    }
+    
+    void PrintValues()
+    {
+        Console.Write("Values h(n): [");
+
+        Node[] nodes = nodesLookup.Values.ToArray();
+
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            Console.Write($"{nodes[i].GetName()}:{nodes[i].GetValue()}");
+
+            if (i < nodes.Length - 1)
+            {
+                Console.Write(",");
+            }
+        }
+
         Console.WriteLine("]");
     }
 
@@ -124,7 +155,7 @@ public class Graph
     {
         Console.WriteLine("Graph:");
 
-        foreach (var pair in nodes)
+        foreach (var pair in nodesLookup)
         {
             Console.Write($"{pair.Key}:");
             PrintNodeArray(pair.Value.GetChildren().ToArray(), ",");
